@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- 进行移动端开发时，请在head内添加viewport设置，以达到最佳的绘制性能； -->
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"> 
+		<title>动态切换添加图层</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+		<style type="text/css">
+			/* 为地图容器指定高度、宽度； */
+			#container{
+				margin-left: 30px;
+				margin-top: 30px;
+				width: 600px;
+				height: 360px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			
+		</div>
+		<button type="button" id="search-btn" class="btn btn-success" >显示/隐藏实时路况</button>
+	</body>
+</html>
+ <!-- 同步加载 在页面添加 JS API 的入口脚本标签，并将其中「您申请的key值」替换为您刚刚申请的 key； -->
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=ac8c5d466f5196290eb87ccbec8c7fa6"></script>
+<script type="text/javascript">
+	// map 对象
+	var map = new AMap.Map('container', {
+		zoom:11,	//级别
+		center:[116.397428, 39.90923],//中心地址
+		viewMode:'3D'	//使用3D视图
+	});
+	// 实时路况图层
+	var trafficLayer  = new AMap.TileLayer.Traffic({
+		zIndex:10
+	});
+	
+	// 实现动态切换添加图层的效果
+	var search_btn = document.getElementById('search-btn');
+	var flag = false;
+	search_btn.onclick = function(){
+		if(!flag){
+			// console.log('添加'),
+			// 添加图层到地图
+			map.add(trafficLayer)
+		}
+		else{
+			// console.log('移除'),
+			// 在地图移除该图层
+			map.remove(trafficLayer)
+		}
+		flag = !flag	
+	}
+	
+	
+</script>
+
+
+
+

@@ -1,0 +1,53 @@
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>鼠标拾取地图坐标及双击右击事件</title>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <script type="text/javascript"
+            src="http://webapi.amap.com/maps?v=1.4.6&key=ac8c5d466f5196290eb87ccbec8c7fa6&plugin=AMap.Autocomplete"></script>
+    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<div id="myPageTop">
+    <table>
+        <tr>
+            <td class="column2">
+                <label>左击获取经纬度：</label>
+            </td>
+        </tr>
+        <tr>
+            <td class="column2">
+                <input type="text" readonly="true" id="lnglat">
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+	
+	var map = new AMap.Map("container",{
+		resizeEnable:true,
+		doubleClickZoom: false
+	})
+	//鼠标单击左键事件
+	map.on('click',function(e){
+		//将当前点击的经纬度赋值到文本框
+		document.getElementById("lnglat").value = e.lnglat.getLng() +","+e.lnglat.getLat();
+	})
+	//鼠标单击右键事件
+	map.on('rightclick',function(){
+		//地图级别放大
+		map.zoomIn();
+	})
+	//鼠标双击事件
+	map.on('dblclick',function(){
+		//弹出当前地图级别
+		alert(map.getZoom())
+	})
+</script>
+	</body>
+</html>

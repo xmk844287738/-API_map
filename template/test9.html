@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>地图创建与销毁</title>
+	</head>
+	<body>
+		<div id="container" style="width: 500px; height: 300px;">
+			
+		</div>
+	</body>
+</html>
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=ac8c5d466f5196290eb87ccbec8c7fa6"></script>
+<script type="text/javascript">
+	var map = new AMap.Map('container');
+	
+	// complete 地图加载完成
+	map.on('complete', function () {
+		console.log('ok')
+	});
+	
+	// 地图销毁
+	// map.destroy();
+	
+	
+// </script>

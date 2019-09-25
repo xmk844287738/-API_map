@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- 进行移动端开发时，请在head内添加viewport设置，以达到最佳的绘制性能； -->
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<!-- 添加锚点,添加折线  检测鼠标左键按下 map 向图层添加一个锚点 -->
+		<title>添加锚点,添加折线</title>
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+		<style type="text/css">
+			/* 为地图容器指定高度、宽度； */
+			#container{
+				margin-left: 30px;
+				margin-top: 30px;
+				width: 1200px;
+				height: 600px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			
+		</div>
+		<button type="button" id="search-btn" class="btn btn-success" >添加/移除多图层</button>
+		<table>
+		    <tr>
+		        <td class="column2">
+		            <label>左击获取经纬度：</label>
+		        </td>
+		    </tr>
+		    <tr>
+		        <td class="column2">
+		            <input type="text" readonly="true" id="lnglat">
+		        </td>
+		    </tr>
+		</table>
+	</body>
+</html>
+ <!-- 同步加载 在页面添加 JS API 的入口脚本标签，并将其中「您申请的key值」替换为您刚刚申请的 key； -->
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=ac8c5d466f5196290eb87ccbec8c7fa6"></script>
+<script type="text/javascript">
+	// map 对象
+	var map = new AMap.Map('container', {
+		center:[124.410868,40.15642], //中心地址 地图以圆为中心扩散
+		zooms: [10,20],//设置地图级别范围 最大级别 20
+		zoom: 13,	//当前地图显示的级别
+		viewMode:'3D'	//使用3D视图
+	});
+	
+	// 实时路况图层
+	// var trafficLayer  = new AMap.TileLayer.Traffic({
+	// 	zIndex:10
+	// })
+	
+	
+	var SatelliteLayer = new AMap.TileLayer.Satellite();
+	var RoadNetLayer = new AMap.TileLayer.RoadNet();
+	// layers = [new AMap.TileLayer.Satellite(),
+	// 		  new AMap.TileLayer.RoadNet()];
+	layers = [SatelliteLayer,RoadNetLayer];
+	
+	// 实现动态切换添加多图层的效果 (把多个图层放在 layers 数组里 )
+	var search_btn = document.getElementById('search-btn');
+	var flag = false;
+	search_btn.onclick = function(){
+		if(!flag){
+			console.log('添加'),
+			// 添加图层到地图 (多个图层)
+			map.add(layers)
+		}
+		else{
+			console.log('移除'),	
+			// 在地图移除该图层  (多个图层)
+			map.remove(layers)
+		}
+		flag = !flag	
+	};
+	
+	// 定义多个锚点
+	var marker = [
+		new AMap.Marker({
+		        position:[124.363457,40.177366]	//辽东学院北校位置
+		    }),
+		new AMap.Marker({
+		        position:[124.427932,40.150807]	//辽东学院南校位置
+		    })
+	]
+	// 把 marker 锚点数组 添加到 地图 map 上
+	map.add(marker);
+	
+	var LD_north = new AMap.LngLat(124.363457,40.177366);	//辽东学院北校位置
+	var LD_sourth = new AMap.LngLat(124.427932,40.150807);	//辽东学院南校位置
+	
+	// 折线
+	var lineArr = [
+		LD_north,LD_sourth
+	];
+	
+	var distance1 = LD_north.distance(LD_sourth);	//南北校直线距离
+	console.log(distance1);
+	
+	var polyline = new AMap.Polyline({
+		path: lineArr,          //设置线覆盖物路径
+		strokeColor: "#3366FF", //线颜色
+		strokeWeight: 3,        //线宽
+		strokeStyle: "solid",   //线样式
+	});
+	
+	map.add(polyline);
+	
+	//异步加载插件
+	AMap.plugin('AMap.ToolBar',function(){
+	        var toolbar = new AMap.ToolBar();
+	        map.addControl(toolbar);
+	});
+	
+	
+	//鼠标单击左键事件
+	map.on('click',function(e){
+		//将当前点击的经纬度赋值到文本框
+		document.getElementById("lnglat").value = e.lnglat.getLng() +","+e.lnglat.getLat();
+		
+		map.add(new AMap.Marker({
+		        position:[e.lnglat.getLng(),e.lnglat.getLat()]	// 向图层继续添加一个锚点
+		    }))
+	});
+	
+</script>
+
+
+
+
